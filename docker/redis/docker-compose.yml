@@ -1,0 +1,76 @@
+version: '3.3'
+services:
+
+  redis-master:
+    image: redis
+    restart: always
+    container_name: redis-master
+    volumes:
+      - ./cnf/redis-6379.conf:/etc/redis/redis.conf
+      - ./data/6379:/data
+    command: redis-server /etc/redis/redis.conf
+    networks:
+      redis-net:
+        ipv4_address: 172.19.0.2
+
+  redis-s1:
+    image: redis
+    restart: always
+    container_name: redis-s1
+    volumes:
+      - ./cnf/redis-6380.conf:/etc/redis/redis.conf
+      - ./data/6380:/data
+    command: redis-server /etc/redis/redis.conf
+    networks:
+      redis-net:
+        ipv4_address: 172.19.0.3
+
+  redis-s2:
+    image: redis
+    restart: always
+    container_name: redis-s2
+    volumes:
+      - ./cnf/redis-6381.conf:/etc/redis/redis.conf
+      - ./data/6381:/data
+    command: redis-server /etc/redis/redis.conf
+    networks:
+      redis-net:
+        ipv4_address: 172.19.0.4
+
+  redis-st1:
+    image: redis
+    restart: always
+    container_name: redis-st1
+    volumes:
+      - ./sentinel/redis-sentinel.1.conf:/etc/redis/sentinel.conf
+    command: redis-sentinel /etc/redis/sentinel.conf
+    networks:
+      redis-net:
+        ipv4_address: 172.19.0.5
+
+  redis-st2:
+    image: redis
+    restart: always
+    container_name: redis-st2
+    volumes:
+      - ./sentinel/redis-sentinel.2.conf:/etc/redis/sentinel.conf
+    command: redis-sentinel /etc/redis/sentinel.conf
+    networks:
+      redis-net:
+        ipv4_address: 172.19.0.6
+
+  redis-st3:
+    image: redis
+    restart: always
+    container_name: redis-st3
+    volumes:
+      - ./sentinel/redis-sentinel.3.conf:/etc/redis/sentinel.conf
+    command: redis-sentinel /etc/redis/sentinel.conf
+    networks:
+      redis-net:
+        ipv4_address: 172.19.0.7
+
+networks:
+  redis-net:
+    external:
+      name: redis-net
